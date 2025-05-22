@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  wireguard:
+    image: linuxserver/wireguard:latest
+    container_name: wireguard
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - SERVERURL=your.ec2.public.ip # Replace with your EC2 public IP or DNS
+      - SERVERPORT=51820
+      - PEERS=1 # Number of client configs to generate
+      - PEERDNS=auto
+    volumes:
+      - ./config:/config
+      - /lib/modules:/lib/modules:ro
+    ports:
+      - 51820:51820/udp
+    sysctls:
+      - net.ipv4.conf.all.src_valid_mark=1
+    restart: unless-stopped
+    privileged: true 
