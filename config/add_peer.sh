@@ -39,6 +39,9 @@ AllowedIPs = 0.0.0.0/0, ::/0
 PersistentKeepalive = 25
 EOF
 
+# Also create <peername>_local.conf with the same content
+cp $PEER_NAME.conf ${PEER_NAME}_local.conf
+
 if command -v qrencode >/dev/null 2>&1; then
   qrencode -t ansiutf8 < $PEER_NAME.conf > $PEER_NAME.png
   echo "QR code generated: $PEER_NAME/$PEER_NAME.png"
