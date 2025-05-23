@@ -6,12 +6,16 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
+# Get the absolute path to the script's directory
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
 PEER_NAME="$1"
-PEER_DIR="$(dirname "$0")/$PEER_NAME"
-SERVER_PUBLIC_KEY="<server_publickey_here>" # <-- Replace with your server's public key
-SERVER_ENDPOINT="<server_public_ip_or_dns>:51820" # <-- Replace with your server's endpoint
+PEER_DIR="$SCRIPT_DIR/$PEER_NAME"
+# Read server public key from file
+SERVER_PUBLIC_KEY=$(cat "$SCRIPT_DIR/server/publickey-server")
+SERVER_ENDPOINT="52.72.186.43:51820"
 WG_NETWORK="10.13.13"
-PEER_IP_SUFFIX=$(ls $(dirname "$0") | grep -E '^peer[0-9]+$' | sed 's/peer//' | sort -n | tail -n1 | awk '{print $1+1}')
+PEER_IP_SUFFIX=$(ls "$SCRIPT_DIR" | grep -E '^peer[0-9]+$' | sed 's/peer//' | sort -n | tail -n1 | awk '{print $1+1}')
 if [ -z "$PEER_IP_SUFFIX" ]; then PEER_IP_SUFFIX=2; fi
 PEER_IP="$WG_NETWORK.$PEER_IP_SUFFIX/32"
 
