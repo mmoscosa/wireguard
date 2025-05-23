@@ -43,8 +43,22 @@ AllowedIPs = 0.0.0.0/0, ::/0
 PersistentKeepalive = 25
 EOF
 
-# Also create <peername>_local.conf with the same content
-cp $PEER_NAME.conf ${PEER_NAME}_local.conf
+# Also create <peername>_local.conf with the improved local config format
+cat > ${PEER_NAME}_local.conf <<EOF
+[Interface]
+PrivateKey = $PRIV_KEY
+ListenPort = 51820
+Address = $PEER_IP
+DNS = 1.1.1.1
+MTU = 1280
+
+[Peer]
+PublicKey = $SERVER_PUBLIC_KEY
+PresharedKey = $PSK
+AllowedIPs = 10.13.13.0/24
+Endpoint = $SERVER_ENDPOINT
+PersistentKeepalive = 25
+EOF
 
 if command -v qrencode >/dev/null 2>&1; then
   qrencode -t ansiutf8 < $PEER_NAME.conf > $PEER_NAME.png
